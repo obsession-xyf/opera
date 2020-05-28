@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	
+	<!-- 加载配置文件 -->
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/config/*.xml</param-value>
+	</context-param>
+
+	<!-- spring监听器 -->
+	<listener>
+		<description>spring监听器</description>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<!-- 防止spring内存溢出监听器 
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>  -->
+	
+	<!-- springmvc 请求分发器 -->
+	<servlet>
+		<description>spring mvc servlet</description>
+		<servlet-name>springMvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<description>spring mvc 配置文件</description>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/spring.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>   
+		<!--
+		1.load-on-startup元素标记容器是否在启动的时候就加载这个servlet(实例化并调用其init()方法
+		2.它的值必须是一个整数，表示servlet应该被载入的顺序
+        3.当值为0或者大于0时，表示容器在应用启动时就加载并初始化这个servlet；
+        4.当值小于0或者没有指定时，则表示容器在该servlet被选择时才会去加载。
+        5.正数的值越小，该servlet的优先级越高，应用启动时就越先加载。
+        6.当值相同时，容器就会自己选择顺序来加载。
+		 -->
+	</servlet>
+	
+	<!-- 对所有的  .do请求进行处理   后缀可以随便取-->
+	<servlet-mapping>
+		<servlet-name>springMvc</servlet-name>
+		<url-pattern>*.html</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>springMvc</servlet-name>
+		<url-pattern>*.json</url-pattern>
+	</servlet-mapping>
+   
+	
+	<!-- 设置编码格式 前台往后台传送数据的编码 -->
+	<filter>
+		<description>字符集过滤器</description>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<description>字符集编码</description>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<!-- 对所有的请求进行过虑 -->
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- session 超时 -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>
